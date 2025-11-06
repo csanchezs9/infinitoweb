@@ -97,7 +97,11 @@ export default async function Home() {
             </p>
           </div>
 
-          <ProductGrid products={productos.map(p => ({ ...p, vendor: p.vendor ?? undefined }))} />
+          <ProductGrid products={productos.map(p => ({
+            ...p,
+            vendor: p.vendor ?? undefined,
+            images: p.images.map(img => ({ src: img.src, alt: img.alt ?? undefined }))
+          }))} />
         </div>
       </section>
 
