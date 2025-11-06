@@ -1,0 +1,81 @@
+// Esquema de base de datos para el e-commerce Infinito Piercing
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = "file:./dev.db"
+}
+
+model Collection {
+  id          String    @id @default(cuid())
+  shopifyId   String    @unique
+  handle      String    @unique
+  title       String
+  description String?
+  productsCount Int     @default(0)
+  categoria   String?
+  emoji       String?
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  products    Product[]
+}
+
+model Product {
+  id          String    @id @default(cuid())
+  shopifyId   String    @unique
+  handle      String    @unique
+  title       String
+  description String?
+  bodyHtml    String?
+  price       String
+  compareAtPrice String?
+  available   Boolean   @default(true)
+  vendor      String?
+  productType String?
+  tags        String?   // JSON string array
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  images      ProductImage[]
+  variants    ProductVariant[]
+  collections Collection[]
+}
+
+model ProductImage {
+  id        String   @id @default(cuid())
+  productId String
+  src       String
+  alt       String?
+  position  Int      @default(0)
+  product   Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
+}
+
+model ProductVariant {
+  id              String   @id @default(cuid())
+  productId       String
+  shopifyId       String   @unique
+  title           String
+  price           String
+  compareAtPrice  String?
+  sku             String?
+  barcode         String?
+  available       Boolean  @default(true)
+  inventoryQty    Int      @default(0)
+  weight          Float?
+  weightUnit      String?
+  requiresShipping Boolean @default(true)
+  product         Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+  createdAt       DateTime @default(now())
+}
+
+// Modelo para relación muchos a muchos entre Product y Collection
+model ProductToCollection {
+  productId    String
+  collectionId String
+
+  @@id([productId, collectionId])
+}
