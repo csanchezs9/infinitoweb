@@ -97,7 +97,7 @@ export default async function Home() {
             </p>
           </div>
 
-          <ProductGrid products={productos} />
+          <ProductGrid products={productos.map(p => ({ ...p, vendor: p.vendor ?? undefined }))} />
         </div>
       </section>
 

@@ -97,7 +97,7 @@ export default async function CollectionPage({ params }: PageProps) {
       </div>
 
       {/* Grid de productos */}
-      <ProductGrid products={productos} />
+      <ProductGrid products={productos.map(p => ({ ...p, vendor: p.vendor ?? undefined }))} />
     </div>
   )
 }
